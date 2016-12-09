@@ -24,11 +24,14 @@ public class CameraController : MonoBehaviour {
 
     [SerializeField] bool testing;
 
+    float temp; //detele this later
+
 	// Use this for initialization
 	void Start () 
 	{
-	    
-	}
+        temp = player.transform.position.z - 50;//delete this later
+
+    }
 	
 	// Update is called once per frame
 	void Update () 
@@ -36,8 +39,11 @@ public class CameraController : MonoBehaviour {
         if(testing)
         {
             state = 4;
-            transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 10, player.transform.position.z - 50);
-            transform.LookAt(player.transform);
+            if (player != null)
+            {
+                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 10, temp);//delete this later
+                transform.LookAt(player.transform);
+            }
             return;
         }
 

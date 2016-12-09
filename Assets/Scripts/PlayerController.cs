@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour {
     /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// NOTE TO SELF
     /// I DISABLED TO INTRO, PUT IT BACK ON
+    /// kirby needs gravity, and shouldnt be able to move at the start
+    /// move start location
     /// </summary>
 	//Intro
 
@@ -19,44 +21,145 @@ public class PlayerController : MonoBehaviour {
     bool Started = false;
     [SerializeField] float speed;
     [SerializeField] float jumpForce;
+    [SerializeField] int jumpCounter = 0;
+    float speedBeforeJump;
+    int maxJumps = 5;
+    bool onGround = true;
+    bool boosted = false;
 
-
-	// Use this for initialization
+    
 	void Start () 
 	{
         rb = this.gameObject.GetComponent<Rigidbody>();
+        rb.maxAngularVelocity = 10000.0f;
 	}
 	
-	// Update is called once per frame
 	void Update () 
 	{
         if(AcceptsControls)
         {
-            //clamp speed
-            if(Input.GetKey(KeyCode.A))
+            if(rb.velocity.magnitude > speed/2 && !boosted)
             {
-                rb.AddForce(new Vector3(-speed, 0, 0));
+                float temp = rb.velocity.y;
+                rb.velocity = rb.velocity.normalized * (speed / 2);
+                rb.velocity = new Vector3(rb.velocity.x, temp, rb.velocity.z);
+            }
+            /*if(rb.velocity.x > speed/2)
+            {
+                rb.velocity = new Vector3(speed/2, rb.velocity.y, rb.velocity.z);
+            }
+            if(rb.velocity.z > speed/2)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, speed / 2);
+            }*/
+
+            rb.angularVelocity = Vector3.zero;
+            if (Input.GetKey(KeyCode.A))
+            {
+                rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y, speed);
             }
             if (Input.GetKey(KeyCode.D))
             {
-                rb.AddForce(new Vector3(speed, 0, 0));
+                rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y, -speed);
             }
             if (Input.GetKey(KeyCode.W))
             {
-                rb.AddForce(new Vector3(0, 0, speed));
+                rb.angularVelocity = new Vector3(speed, rb.angularVelocity.y, rb.angularVelocity.z);
             }
             if (Input.GetKey(KeyCode.S))
             {
-                rb.AddForce(new Vector3(0, 0, -speed));
+                rb.angularVelocity = new Vector3(-speed, rb.angularVelocity.y, rb.angularVelocity.z);
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if(!onGround)
             {
-                rb.useGravity = true;            
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                //disable ground controls when in air
-                //space+d = jump right
+                if (Input.GetKey(KeyCode.A))
+                {
+                    if(speedBeforeJump < 5)
+                    {
+                        rb.velocity = new Vector3(-5, rb.velocity.y, rb.velocity.z);
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector3(-speedBeforeJump, rb.velocity.y, rb.velocity.z);
+                    }
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    if (speedBeforeJump < 5)
+                    {
+                        rb.velocity = new Vector3(5, rb.velocity.y, rb.velocity.z);
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector3(speedBeforeJump, rb.velocity.y, rb.velocity.z);
+                    }
+                }
+                if (Input.GetKey(KeyCode.W))
+                {
+                    if(speedBeforeJump < 5)
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, 5);
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, speedBeforeJump);
+                    }
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    if (speedBeforeJump < 5)
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, -5);
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, -speedBeforeJump);
+                    }
+                 }
             }
-
+            if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < maxJumps)
+            {
+                rb.useGravity = true;       /////////////// TAKE THIS OUT LATER
+                if(onGround)
+                {
+                    speedBeforeJump = rb.velocity.magnitude;
+                } 
+                onGround = false;
+                rb.velocity = Vector3.zero;
+                if (Input.GetKey (KeyCode.A))
+                {
+                    rb.AddForce(Vector3.left * jumpForce, ForceMode.Impulse);
+                    rb.velocity = Vector3.left * jumpForce;
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    rb.AddForce(Vector3.right * jumpForce, ForceMode.Impulse);
+                    rb.velocity = Vector3.right * jumpForce;
+                }
+                if (Input.GetKey(KeyCode.W))
+                {
+                    rb.AddForce(Vector3.forward * jumpForce, ForceMode.Impulse);
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    rb.AddForce(Vector3.back * jumpForce, ForceMode.Impulse);
+                }
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                jumpCounter++;
+            }
         }
 	}
+
+    void OnCollisionEnter(Collision other)
+    {
+        switch(other.gameObject.tag)
+        {
+            case "Floor":
+                {
+                    jumpCounter = 0;
+                    onGround = true;
+                    break;
+                }
+        }
+    }
 }

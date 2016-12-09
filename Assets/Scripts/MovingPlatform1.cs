@@ -106,7 +106,6 @@ public class MovingPlatform1 : MonoBehaviour {
     {
         if(other.gameObject.tag == "Player")
         {
-            Debug.Log("hit)");
             other.gameObject.transform.SetParent(this.gameObject.transform);
         }
     }

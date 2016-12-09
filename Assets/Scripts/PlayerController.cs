@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour {
     Rigidbody rb;
 
 	//Controls
-	public bool AcceptsControls = true;
+	public bool AcceptsControls = true; // change to false;
     bool Started = false;
     [SerializeField] float speed;
     [SerializeField] float jumpForce;
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
     float speedBeforeJump;
     int maxJumps = 5;
     bool onGround = true;
-    bool boosted = false;
+    public bool boosted = false;
 
     
 	void Start () 
@@ -158,6 +158,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     jumpCounter = 0;
                     onGround = true;
+                    boosted = false;
                     break;
                 }
         }

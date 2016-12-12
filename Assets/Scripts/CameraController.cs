@@ -22,14 +22,14 @@ public class CameraController : MonoBehaviour {
     float journeyLength;
     Quaternion rotationLength;
 
-    [SerializeField] bool testing;
+    [SerializeField] bool testing; //delete this later
 
     float temp; //detele this later
 
 	// Use this for initialization
 	void Start () 
 	{
-        temp = player.transform.position.z - 50;//delete this later
+        temp = player.transform.position.z - 20;//delete this later
 
     }
 	
@@ -112,6 +112,17 @@ public class CameraController : MonoBehaviour {
                 player.GetComponent<PlayerController>().AcceptsControls = true;
                 state = 4;
             }
+        }
+
+        if(state ==4)
+        {
+            transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 10, temp);//delete this later
+            transform.LookAt(player.transform);
+        }
+
+        if(state == 5)
+        {
+
         }
 
 	}

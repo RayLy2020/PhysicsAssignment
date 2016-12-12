@@ -15,10 +15,16 @@ public class PlayerController : MonoBehaviour {
 
     //Setup
     Rigidbody rb;
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip jumpSound;
+    [SerializeField] AudioClip landSound;
+    [SerializeField] AudioClip falcon;
+    [SerializeField] AudioClip punch;
+    [SerializeField] AudioClip taunt;
+
 
 	//Controls
 	public bool AcceptsControls = true; // change to false;
-    bool Started = false;
     [SerializeField] float speed;
     [SerializeField] float jumpForce;
     [SerializeField] int jumpCounter = 0;
@@ -38,12 +44,15 @@ public class PlayerController : MonoBehaviour {
 	{
         if(AcceptsControls)
         {
-            if(rb.velocity.magnitude > speed/2 && !boosted)
+            #region Speed Limiter
+            if (rb.velocity.magnitude > speed/2 && !boosted)
             {
                 float temp = rb.velocity.y;
                 rb.velocity = rb.velocity.normalized * (speed / 2);
                 rb.velocity = new Vector3(rb.velocity.x, temp, rb.velocity.z);
             }
+            #endregion
+
             /*if(rb.velocity.x > speed/2)
             {
                 rb.velocity = new Vector3(speed/2, rb.velocity.y, rb.velocity.z);
@@ -53,6 +62,7 @@ public class PlayerController : MonoBehaviour {
                 rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, speed / 2);
             }*/
 
+            #region Ground Control
             rb.angularVelocity = Vector3.zero;
             if (Input.GetKey(KeyCode.A))
             {
@@ -70,7 +80,10 @@ public class PlayerController : MonoBehaviour {
             {
                 rb.angularVelocity = new Vector3(-speed, rb.angularVelocity.y, rb.angularVelocity.z);
             }
-            if(!onGround)
+            #endregion
+
+            #region Air Controls
+            if (!onGround)
             {
                 if (Input.GetKey(KeyCode.A))
                 {
@@ -117,10 +130,16 @@ public class PlayerController : MonoBehaviour {
                     }
                  }
             }
+            #endregion
+
+            #region Jump Controls
             if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < maxJumps)
             {
                 rb.useGravity = true;       /////////////// TAKE THIS OUT LATER
-                if(onGround)
+                //this.gameObject.transform.SetParent(null);
+                aud.clip = jumpSound;
+                aud.Play();
+                if (onGround)
                 {
                     speedBeforeJump = rb.velocity.magnitude;
                 } 
@@ -147,6 +166,21 @@ public class PlayerController : MonoBehaviour {
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 jumpCounter++;
             }
+            #endregion
+
+            #region Silly Controls
+            if(Input.GetKeyDown(KeyCode.Z))
+            {
+                aud.clip = taunt;
+                aud.Play();
+            }
+            if(Input.GetKeyDown(KeyCode.X))
+            {
+                aud.clip = falcon;
+                aud.Play();
+                StartCoroutine("punchu");
+            }
+            #endregion
         }
 	}
 
@@ -156,11 +190,27 @@ public class PlayerController : MonoBehaviour {
         {
             case "Floor":
                 {
+                    if(jumpCounter != 0)
+                    {
+                        aud.clip = landSound;
+                        aud.Play();
+                    }
                     jumpCounter = 0;
                     onGround = true;
                     boosted = false;
+                    AcceptsControls = true;
                     break;
                 }
+        }
+    }
+
+    IEnumerator punchu()
+    {
+        yield return new WaitForSeconds(1);
+        if(aud.clip == falcon)
+        {
+            aud.clip = punch;
+            aud.Play();
         }
     }
 }

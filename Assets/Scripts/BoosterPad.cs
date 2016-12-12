@@ -9,6 +9,9 @@ public class BoosterPad : MonoBehaviour {
     PlayerController pc;
     Rigidbody rb;
 
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip zoom;
+
     // Use this for initialization
     void Start ()
     {
@@ -24,6 +27,15 @@ public class BoosterPad : MonoBehaviour {
 
     private void OnCollisionEnter(Collision other)
     {
+        if (other.gameObject.tag == "Player")
+        {
+            aud.clip = zoom;
+            aud.Play();
+        }
+    }
+
+    private void OnCollisionStay(Collision other)
+    {
         if(other.gameObject.tag == "Player")
         {
             pc.boosted = true;
@@ -34,6 +46,6 @@ public class BoosterPad : MonoBehaviour {
 
     private void OnCollisionExit(Collision other)
     {
-        pc.AcceptsControls = true;
+        
     }
 }

@@ -8,12 +8,17 @@ public class BlasterBehaviour : MonoBehaviour {
     public GameObject smoke;
     public GameObject mine;
     public GameObject mineTop;
+    public GameObject player;
     GameObject createdObject;
+
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip boom;
 
     public Material ice;
     public Material red;
 
-    int fadeOutTime = 5;
+    [SerializeField] int fadeOutTime = 5;
+    [SerializeField] float noControlTime = 1.5f;
     int timey = 0;
     float m_alpha = 1;
 
@@ -47,8 +52,13 @@ public class BlasterBehaviour : MonoBehaviour {
             createdObject.transform.localScale = new Vector3(5, 5, 5);
             smoke.SetActive(true);
             CancelInvoke();
+            aud.clip = boom;
+            aud.Play();
             Destroy(mine);
+            player.GetComponent<PlayerController>().AcceptsControls = false;
+            player.GetComponent<Rigidbody>().AddForce(new Vector3(10f, 15f, 0), ForceMode.Impulse);
             StartCoroutine("destroyAtEnd");
+            StartCoroutine("NoControlEnd");
         }
     }
     void Increment()
@@ -79,5 +89,10 @@ public class BlasterBehaviour : MonoBehaviour {
         yield return new WaitForSeconds(fadeOutTime);
         Destroy(smoke);
         Destroy(this.gameObject);
+    }
+    IEnumerator NoControlEnd()
+    {
+        yield return new WaitForSeconds(noControlTime);
+        player.GetComponent<PlayerController>().AcceptsControls = true;
     }
 }

@@ -4,6 +4,10 @@ using System.Collections;
 public class DeathBarrier : MonoBehaviour {
 
     public GameObject startPosition;
+    GameObject player;
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip deathsong;
+    [SerializeField] AudioClip popstar;
 
 	// Use this for initialization
 	void Start () 
@@ -21,8 +25,21 @@ public class DeathBarrier : MonoBehaviour {
 	{
 		if(other.gameObject.tag == "Player")
 		{
-            other.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            other.gameObject.transform.position = startPosition.transform.position;
+            player = other.gameObject;
+            Camera.main.GetComponent<CameraController>().state = 5;
+            aud.clip = deathsong;
+            aud.Play();
+            StartCoroutine("respawn");
 		}
 	}
+
+    IEnumerator respawn()
+    {
+        yield return new WaitForSeconds(6);
+        Camera.main.GetComponent<CameraController>().state = 4;
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        player.gameObject.transform.position = startPosition.transform.position;
+        aud.clip = popstar;
+        aud.Play();
+    }
 }

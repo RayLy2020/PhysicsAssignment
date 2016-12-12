@@ -26,6 +26,7 @@ public class DeathBarrier : MonoBehaviour {
 		if(other.gameObject.tag == "Player")
 		{
             player = other.gameObject;
+            player.GetComponent<PlayerController>().AcceptsControls = false;
             Camera.main.GetComponent<CameraController>().state = 5;
             aud.clip = deathsong;
             aud.Play();
@@ -39,6 +40,7 @@ public class DeathBarrier : MonoBehaviour {
         Camera.main.GetComponent<CameraController>().state = 4;
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         player.gameObject.transform.position = startPosition.transform.position;
+        player.GetComponent<PlayerController>().AcceptsControls = true;
         aud.clip = popstar;
         aud.Play();
     }

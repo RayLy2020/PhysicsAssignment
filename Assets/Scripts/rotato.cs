@@ -11,12 +11,12 @@ public class rotato : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKey(KeyCode.UpArrow) && gameObject.transform.rotation.eulerAngles.z <= 50 && gameObject.transform.rotation.eulerAngles.z >= 0)
+        if (Input.GetKey(KeyCode.UpArrow) && gameObject.transform.rotation.eulerAngles.z <= 40 && gameObject.transform.rotation.eulerAngles.z >= 0)
         {
             transform.Rotate(new Vector3(0, 0, 1), Space.World);
         }
 
-        if (gameObject.transform.rotation.eulerAngles.z > 1 && gameObject.transform.rotation.eulerAngles.z <= 51)
+        if (gameObject.transform.rotation.eulerAngles.z > 1 && gameObject.transform.rotation.eulerAngles.z <= 41)
         {
             Debug.Log("hi");
             Debug.Log(gameObject.transform.rotation.eulerAngles.z);

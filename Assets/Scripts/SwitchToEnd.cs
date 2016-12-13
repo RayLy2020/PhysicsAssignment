@@ -6,8 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class SwitchToEnd : MonoBehaviour {
 
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip win;
+    bool once = false;
+
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 		
 	}
 	
@@ -16,11 +21,20 @@ public class SwitchToEnd : MonoBehaviour {
 		
 	}
 
-    void OnTriggerEnter(Collider col)
+    void OnCollisionEnter(Collision other)
     {
-        if (col.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && !once)
         {
-            SceneManager.LoadScene("Scene4");
+            once = true;
+            aud.clip = win;
+            aud.Play();
+            other.gameObject.GetComponent<PlayerController>().AcceptsControls = false;
+            Invoke("SwitchToScene4", 4);
         }
+    }
+
+    void SwitchToScene4()
+    {
+        SceneManager.LoadScene("Scene4");
     }
 }

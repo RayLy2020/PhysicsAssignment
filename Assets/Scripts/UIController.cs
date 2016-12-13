@@ -8,10 +8,14 @@ public class UIController : MonoBehaviour {
     public Image logo;
     public GameObject player;
     Color m_colour;
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip boom;
 
+    public GameObject smoke;
     bool Started = false;
     int timey = 0;
-
+    [SerializeField] bool once = false;
+    float m_alpha = 1;
     //Maths
     float AlphaValue = 1.0f;
 
@@ -30,6 +34,18 @@ public class UIController : MonoBehaviour {
         {
             Started = true;
             InvokeRepeating("Decrement", 0, 0.01f);
+        }
+        if (once)
+        {
+            m_alpha -= 0.01f;
+            foreach (Renderer ren in smoke.GetComponentsInChildren<Renderer>())
+            {
+                ren.material.color = new Color(0, 0, 0, m_alpha);
+            }
+        }
+        if(m_alpha <= 0)
+        {
+            this.enabled = false;
         }
     }
 
@@ -57,9 +73,12 @@ public class UIController : MonoBehaviour {
             AlphaValue = 1;
             CancelInvoke();
             Camera.main.GetComponent<CameraController>().state = 1;
+            smoke.SetActive(true);
+            aud.clip = boom;
+            aud.Play();
             player.GetComponent<Rigidbody>().useGravity = true;
+            once = true;
             player.GetComponent<Rigidbody>().velocity = new Vector3(10, 10, 0);
-            this.enabled = false;
         }
     }
 }

@@ -22,6 +22,17 @@ public class CameraController : MonoBehaviour {
     float journeyLength;
     Quaternion rotationLength;
 
+    //audio
+    [SerializeField] AudioSource audBG;
+    [SerializeField] AudioSource audEN;
+    [SerializeField] AudioClip threeaud;
+    [SerializeField] AudioClip twoaud;
+    [SerializeField] AudioClip oneaud;
+    [SerializeField] AudioClip goaud;
+    [SerializeField] AudioClip popaud;
+
+    bool once = false;
+
     [SerializeField] bool testing; //delete this later
 
     float temp; //detele this later
@@ -45,6 +56,10 @@ public class CameraController : MonoBehaviour {
                 transform.LookAt(player.transform);
             }
             return;
+        }
+        if(state != 4)
+        {
+            player.GetComponent<PlayerController>().AcceptsControls = false;
         }
 
 	    if(state == 1)
@@ -86,7 +101,7 @@ public class CameraController : MonoBehaviour {
 
             if(transform.position == position2.position)
             {
-                position3 = new Vector3(player.transform.position.x, player.transform.position.y + 10, player.transform.position.z - 50);
+                position3 = new Vector3(player.transform.position.x, player.transform.position.y + 10, temp);
                 StartCoroutine(transitionToState3());
             }
         }
@@ -104,13 +119,11 @@ public class CameraController : MonoBehaviour {
             float distCovered = (Time.time - startTime) * speed;
             float fracJourney = distCovered / journeyLength;
             transform.position = Vector3.Lerp(position2.position, position3, fracJourney);
-            transform.rotation = Quaternion.Lerp(rotationLength, Quaternion.Euler(0, 0, 0), fracJourney);
+            transform.rotation = Quaternion.Lerp(rotationLength, Quaternion.Euler(26.565f, 0, 0), fracJourney);
 
             if (transform.position == position3)
             {
-                transform.SetParent(player.transform);
-                player.GetComponent<PlayerController>().AcceptsControls = true;
-                state = 4;
+                state = 5;
             }
         }
 
@@ -120,9 +133,13 @@ public class CameraController : MonoBehaviour {
             transform.LookAt(player.transform);
         }
 
-        if(state == 5)
+        if(state == 5 && !once)
         {
-
+            once = true;
+            Invoke("three", 0);
+            Invoke("two", 1);
+            Invoke("one", 2);
+            Invoke("go", 3);
         }
 
 	}
@@ -132,5 +149,30 @@ public class CameraController : MonoBehaviour {
     {
         yield return new WaitForSeconds(1.5f);
         state = 3;
+    }
+
+    void three()
+    {
+        audEN.clip = threeaud;
+        audEN.Play();
+    }
+    void two()
+    {
+        audEN.clip = twoaud;
+        audEN.Play();
+    }
+    void one()
+    {
+        audEN.clip = oneaud;
+        audEN.Play();
+    }
+    void go()
+    {
+        audEN.clip = goaud;
+        audEN.Play();
+        audBG.clip = popaud;
+        audBG.Play();
+        player.GetComponent<PlayerController>().AcceptsControls = true;
+        state = 4;
     }
 }

@@ -30,7 +30,12 @@ public class Claw : MonoBehaviour {
             Player.transform.position = gameObject.transform.position - Distance;
             this.gameObject.GetComponent<Rigidbody>().AddForce(0, 10, 0);
             Parent.GetComponent<Rigidbody>().velocity = new Vector3(4, 0, 0);
-
+            if(this.gameObject.transform.position.x >= Marker.transform.position.x)
+            {
+                Player.transform.SetParent(null);
+                Attach = false;
+                Player.GetComponent<Rigidbody>().useGravity = true;
+            }
         }
 
         if (Attach == false)
@@ -56,6 +61,8 @@ public class Claw : MonoBehaviour {
         }
 
     }
+
+
 
 
 

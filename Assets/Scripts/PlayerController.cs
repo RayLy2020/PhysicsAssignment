@@ -25,9 +25,9 @@ public class PlayerController : MonoBehaviour {
 
 	//Controls
 	public bool AcceptsControls = true; // change to false;
-    [SerializeField] float speed;
+    public float speed;
     [SerializeField] float jumpForce;
-    [SerializeField] int jumpCounter = 0;
+    public int jumpCounter = 0;
     float speedBeforeJump;
     int maxJumps = 5;
     bool onGround = true;

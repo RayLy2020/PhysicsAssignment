@@ -46,4 +46,4 @@ public class HiroMovingPlatform1 : MonoBehaviour {
     }
 
 }
-}
+

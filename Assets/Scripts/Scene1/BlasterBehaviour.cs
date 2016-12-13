@@ -61,7 +61,8 @@ public class BlasterBehaviour : MonoBehaviour {
             StartCoroutine("NoControlEnd");
         }
     }
-    void Increment()
+
+    void Increment() //Increment timer and change material
     {
         timey++;
         if (timey % 2 == 0)
@@ -79,11 +80,7 @@ public class BlasterBehaviour : MonoBehaviour {
             }
         }
     }
-
-    void Decrement()
-    {
-    }
-
+    
     IEnumerator destroyAtEnd()
     {
         yield return new WaitForSeconds(fadeOutTime);

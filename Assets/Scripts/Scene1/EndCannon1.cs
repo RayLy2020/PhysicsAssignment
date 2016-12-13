@@ -44,7 +44,8 @@ public class EndCannon1 : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-		if(state==1 && !state1Fire)
+        #region cinematic1
+        if (state==1 && !state1Fire)
         {
             state1Fire = true;
             rb.velocity = Vector3.zero;
@@ -54,7 +55,9 @@ public class EndCannon1 : MonoBehaviour {
             StartCoroutine("startState2");
             StartCoroutine("startState3");
         }
+        #endregion
 
+        #region cinematic2
         if (state == 2 && !state2Fire)
         {
             startTime = Time.time;
@@ -67,8 +70,10 @@ public class EndCannon1 : MonoBehaviour {
             float fracJourney = distCovered / journeyLength;
             player.transform.position = Vector3.Lerp(startPos, endObj.transform.position, fracJourney);
         }
+        #endregion
 
-        if(state==3 && !state3Fire)
+        #region cinematic3
+        if (state==3 && !state3Fire)
         {
             state3Fire = true;
             player.transform.position = endObj.transform.position;
@@ -84,6 +89,7 @@ public class EndCannon1 : MonoBehaviour {
             Invoke("StartScene2", 4);
         }
 	}
+    #endregion
 
     void OnCollisionEnter(Collision other)
     {
@@ -94,7 +100,6 @@ public class EndCannon1 : MonoBehaviour {
             audMusic.clip = victory;
             audMusic.Play();
             state = 1;
-
         }
     }
 

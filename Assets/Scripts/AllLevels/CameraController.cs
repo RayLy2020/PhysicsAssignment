@@ -40,29 +40,34 @@ public class CameraController : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-        temp = player.transform.position.z - 20;//delete this later
-
+        temp = player.transform.position.z - 20;
     }
 	
 	// Update is called once per frame
 	void Update () 
 	{
-        if(testing)
+        #region Testing
+        if (testing)
         {
             state = 4;
             if (player != null)
             {
-                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 10, temp);//delete this later
+                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 10, temp);
                 transform.LookAt(player.transform);
             }
             return;
         }
-        if(state != 4)
+        #endregion
+
+        #region CheckForCinematic
+        if (state != 4)
         {
             player.GetComponent<PlayerController>().AcceptsControls = false;
         }
+        #endregion
 
-	    if(state == 1)
+        #region cinematic1
+        if (state == 1)
         {
             if(!transition0)
             {
@@ -83,8 +88,10 @@ public class CameraController : MonoBehaviour {
                 state = 2;
             }
         }
+        #endregion
 
-        if(state == 2)
+        #region cinematic2
+        if (state == 2)
         {
             if(!transition1)
             {
@@ -105,8 +112,10 @@ public class CameraController : MonoBehaviour {
                 StartCoroutine(transitionToState3());
             }
         }
+        #endregion
 
-        if(state == 3)
+        #region cinematic3
+        if (state == 3)
         {
             if(!transition2)
             {
@@ -126,14 +135,18 @@ public class CameraController : MonoBehaviour {
                 state = 5;
             }
         }
+        #endregion
 
-        if(state ==4)
+        #region Default
+        if (state ==4)
         {
             transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 10, temp);//delete this later
             transform.LookAt(player.transform);
         }
+        #endregion
 
-        if(state == 5 && !once)
+        #region cinematic4
+        if (state == 5 && !once)
         {
             once = true;
             Invoke("three", 0);
@@ -141,8 +154,8 @@ public class CameraController : MonoBehaviour {
             Invoke("one", 2);
             Invoke("go", 3);
         }
-
-	}
+        #endregion
+    }
 
 
     IEnumerator transitionToState3()
@@ -156,16 +169,19 @@ public class CameraController : MonoBehaviour {
         audEN.clip = threeaud;
         audEN.Play();
     }
+
     void two()
     {
         audEN.clip = twoaud;
         audEN.Play();
     }
+
     void one()
     {
         audEN.clip = oneaud;
         audEN.Play();
     }
+
     void go()
     {
         audEN.clip = goaud;
@@ -175,4 +191,5 @@ public class CameraController : MonoBehaviour {
         player.GetComponent<PlayerController>().AcceptsControls = true;
         state = 4;
     }
+
 }

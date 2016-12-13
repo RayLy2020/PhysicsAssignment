@@ -4,13 +4,6 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 
-    /// <summary>
-    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// NOTE TO SELF
-    /// I DISABLED TO INTRO, PUT IT BACK ON
-    /// kirby needs gravity, and shouldnt be able to move at the start
-    /// move start location
-    /// </summary>
 	//Intro
 
     //Setup
@@ -24,7 +17,7 @@ public class PlayerController : MonoBehaviour {
 
 
 	//Controls
-	public bool AcceptsControls = true; // change to false;
+	public bool AcceptsControls = true; // change to false in inspector;
     public float speed;
     [SerializeField] float jumpForce;
     public int jumpCounter = 0;
@@ -52,16 +45,7 @@ public class PlayerController : MonoBehaviour {
                 rb.velocity = new Vector3(rb.velocity.x, temp, rb.velocity.z);
             }
             #endregion
-
-            /*if(rb.velocity.x > speed/2)
-            {
-                rb.velocity = new Vector3(speed/2, rb.velocity.y, rb.velocity.z);
-            }
-            if(rb.velocity.z > speed/2)
-            {
-                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, speed / 2);
-            }*/
-
+            
             #region Ground Control
             rb.angularVelocity = Vector3.zero;
             if (Input.GetKey(KeyCode.A))

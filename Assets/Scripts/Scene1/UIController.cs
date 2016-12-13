@@ -49,7 +49,7 @@ public class UIController : MonoBehaviour {
         }
     }
 
-    void Increment()
+    void Increment() //Change Color
     {
         timey++;
         if (timey % 2 == 0)
@@ -62,7 +62,7 @@ public class UIController : MonoBehaviour {
         }
     }
     
-    void Decrement()
+    void Decrement() //Fadeout
     {
         AlphaValue -= 0.005f;
         instructions.GetComponent<CanvasRenderer>().SetAlpha(AlphaValue);
